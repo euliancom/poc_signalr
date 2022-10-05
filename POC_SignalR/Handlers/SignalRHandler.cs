@@ -11,12 +11,28 @@ public class SignalRHandler
         HubConnection = new HubConnectionBuilder()
             .WithUrl("http://localhost:5188/chatHub")
             .Build();
+        HubConnection.Closed += async (error) =>
+        {
+            await Task.Delay(new Random().Next(0, 5) * 1000);
+            await HubConnection.StartAsync();
+        };
     }
-    public async Task<bool> Handle(string message)
+
+    public async 
+    Task
+Open()
     {
         await HubConnection.StartAsync();
+    }
+
+    public async Task<bool> Handle(string message)
+    {
         await HubConnection.InvokeAsync("SendMessage", "API", message);
-        await HubConnection.StopAsync();
         return true;
+    }
+
+    public async void Stop()
+    {
+        await HubConnection.StopAsync();
     }
 }

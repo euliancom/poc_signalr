@@ -15,6 +15,7 @@ public class SignalRController : ControllerBase
     {
         _logger = logger;
         _signalRHandler = signalRHandler ?? throw new ArgumentNullException(nameof(signalRHandler));
+        _ = _signalRHandler.Open();
     }
 
     [HttpPost("message")]
